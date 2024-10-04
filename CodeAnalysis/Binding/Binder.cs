@@ -1,12 +1,13 @@
-﻿using rs.CodeAnalysis.Syntax;
+﻿using ReSharp.CodeAnalysis;
+using rs.CodeAnalysis.Syntax;
 
 namespace rs.CodeAnalysis.Binding
 {
     internal sealed class Binder
     {
 
-       private readonly List<string> _dignostics = new List<string> ();
-        public IEnumerable<string> Dignostics => _dignostics;
+        private readonly DiagonosticBag _dignostics = new DiagonosticBag();
+        public DiagonosticBag Dignostics  => _dignostics;
 
         public BoundExpression BindExpression(ExpressionSyntax syntax)
         {
@@ -38,7 +39,7 @@ namespace rs.CodeAnalysis.Binding
 
             if(boundOperator is null)
             {
-                _dignostics.Add($"Unary Operator `[{syntax.OperatorToken.Text}]` is not defined for type {boundOperand.Type}");
+                _dignostics.ReportUndefainedUnaryOpeartor(syntax.OperatorToken.Span, syntax.OperatorToken.Text, boundOperand.Type);
                 return boundOperand;
             }
             return new BoundUnaryExpression(boundOperator, boundOperand);
@@ -55,7 +56,7 @@ namespace rs.CodeAnalysis.Binding
 
             if (boundOperator == null)
             {
-                _dignostics.Add($"Binary Operator `[{syntax.OperatorToken.Text}]` is not defined for type {boundLeft.Type} and {boundRight.Type}");
+                _dignostics.ReportUndefainedBinaryOpeartor(syntax.OperatorToken.Span, syntax.OperatorToken.Text, boundLeft.Type , boundRight.Type);
                 return boundLeft;
             }
 

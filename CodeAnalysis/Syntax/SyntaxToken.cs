@@ -1,4 +1,6 @@
-﻿namespace rs.CodeAnalysis.Syntax
+﻿using ReSharp.CodeAnalysis;
+
+namespace rs.CodeAnalysis.Syntax
 {
     public class SyntaxToken : SyntaxNode
     {
@@ -13,6 +15,7 @@
         public int Position;
         public string Text;
         public object Value;
+        public TextSpan Span => new TextSpan(Position, Text.Length);
 
 
         public override IEnumerable<SyntaxNode> GetChildren()

@@ -1,16 +1,19 @@
-﻿namespace rs.CodeAnalysis.Syntax
+﻿using ReSharp.CodeAnalysis;
+
+namespace rs.CodeAnalysis.Syntax
 {
-    public class Lexer
+    internal sealed class Lexer
     {
 
-        //Current value in the text
         private char Current => Peek(0);
 
         private char Lookahead => Peek(1);
 
-        private List<string> _diagnostics = new();
-        public IEnumerable<string> Diagnostics => _diagnostics;
+        private DiagonosticBag  _diagnostics = new();
+        public DiagonosticBag Diagnostics => _diagnostics;
+
         private readonly string _text;
+
         // the position in The Text
         private int _position;
 
@@ -39,24 +42,25 @@
                 return new SyntaxToken(SyntaxType.EndOfFileToken, _position, "\0", null);
 
             // Handle Numbers
+            var Start = _position;
+
             if (char.IsDigit(Current))
             {
-                var Start = _position;
                 // If The Number More Than 1 Digits
-                while (char.IsDigit(Current))
+               while (char.IsDigit(Current))
                     Next();
 
                 var Length = _position - Start;
                 var Text = _text.Substring(Start, Length);
                 if (!int.TryParse(Text, out var Value))
-                    _diagnostics.Add($"The Number {_text} isnt valid Int32");
+                    _diagnostics.ReportInvalidNumber(new TextSpan(Start, Length) , _text,typeof(int));
                 return new SyntaxToken(SyntaxType.NumberToken, Start, Text, Value);
             }
 
             // Skipping White Spaces
             if (char.IsWhiteSpace(Current))
             {
-                var Start = _position;
+                //var Start = _position;
                 while (char.IsWhiteSpace(Current))
                     Next();
                 var Length = _position - Start;
@@ -67,7 +71,6 @@
 
             if (char.IsWhiteSpace(Current))
             {
-                var Start = _position;
                 while (char.IsWhiteSpace(Current))
                     Next();
                 var Length = _position - Start;
@@ -78,7 +81,6 @@
 
             if (char.IsLetter(Current))
             {
-                var Start = _position;
                 while (char.IsLetter(Current))
                     Next();
 
@@ -105,25 +107,39 @@
                 case ')':
                     return new SyntaxToken(SyntaxType.CloseParenthesisToken, _position++, ")", null);
                 case '&':
-                    if (Lookahead == '&')
-                        return new SyntaxToken(SyntaxType.AmperSandAmperSandToken, _position += 2, "&&", null);
+                        if (Lookahead == '&')
+                        {
+                            _position += 2;
+                             return new SyntaxToken(SyntaxType.AmperSandAmperSandToken, Start, "&&", null);
+                        }   
                     break;   
                 case '|':
-                    if (Lookahead == '|')
-                        return new SyntaxToken(SyntaxType.PipePipeToken, _position += 2, "||", null);
+                        if (Lookahead == '|')
+                        {
+                            _position += 2;
+                            return new SyntaxToken(SyntaxType.PipePipeToken, Start, "||", null);
+                        }                     
                     break;
                 case '=':
-                    if (Lookahead == '=')
-                        return new SyntaxToken(SyntaxType.EqualsEqualsToken, _position += 2, "==", null);
+                        if (Lookahead == '=')
+                        {
+                            _position += 2;
+                            return new SyntaxToken(SyntaxType.EqualsEqualsToken, Start, "==", null);
+                        }    
                     break;
                 case '!':
-                    if (Lookahead == '=')
-                        return new SyntaxToken(SyntaxType.BangEqualsToken, _position += 2, "!=", null);
-                    else
-                        return new SyntaxToken(SyntaxType.BangToken, _position++, "!", null);
+                        if (Lookahead == '=')
+                        {
+                            _position += 2;
+                            return new SyntaxToken(SyntaxType.BangEqualsToken, Start, "!=", null);
+                        }
+                        else {
+                            _position += 1;
+                            return new SyntaxToken(SyntaxType.BangToken, Start, "!", null);
+                        }                   
             }
 
-            _diagnostics.Add($"ERROR bad character input '{Current}' ");
+            _diagnostics.ReportBadCharacter( _position, Current);
             //  put the position then Add It - take of the vlaue from substring
             return new SyntaxToken(SyntaxType.BadToken, _position++, _text.Substring(_position - 1, 1), null);
         }

@@ -1,11 +1,13 @@
-﻿namespace rs.CodeAnalysis.Syntax
+﻿using ReSharp.CodeAnalysis;
+
+namespace rs.CodeAnalysis.Syntax
 {
     public sealed class SyntaxTree
     {
-        public IReadOnlyList<string> Diagnostics { get; }
+        public IReadOnlyList<Diagonostic> Diagnostics { get; }
         public readonly ExpressionSyntax Root;
         public readonly SyntaxToken EndOfFileToken;
-        public SyntaxTree(IEnumerable<string> diagnostics, ExpressionSyntax root, SyntaxToken endOfFileToken)
+        public SyntaxTree(IEnumerable<Diagonostic> diagnostics, ExpressionSyntax root, SyntaxToken endOfFileToken)
         {
             EndOfFileToken = endOfFileToken;
             Root = root;

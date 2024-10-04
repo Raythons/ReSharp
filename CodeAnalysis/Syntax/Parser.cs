@@ -4,12 +4,12 @@ using System.Runtime.Intrinsics.X86;
 
 namespace rs.CodeAnalysis.Syntax
 {
-    public sealed partial class Parser
+    internal sealed partial class Parser
     {
         private SyntaxToken[] _tokens;
         private int _position;
-        private List<string> _diagnostics = new();
-        public IEnumerable<string> Diagnostics => _diagnostics;
+        private DiagonosticBag _diagnostics = new();
+        public DiagonosticBag Diagnostics => _diagnostics;
 
         public Parser(string text)
         {
@@ -52,7 +52,7 @@ namespace rs.CodeAnalysis.Syntax
             if (Current.Type == type)
                 return NextToken();
 
-            _diagnostics.Add($"ERROR: Unexpected Token <{Current.Type}>, expected <{type}>");
+            _diagnostics.ReportUnexpectedToken(Current.Span, Current.Type, type);
             return new SyntaxToken(type, Current.Position, null, null);
         }
 

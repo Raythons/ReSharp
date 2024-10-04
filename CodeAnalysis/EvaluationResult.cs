@@ -2,13 +2,13 @@
 {
     public sealed class EvaluationResult
     {
-        public EvaluationResult(IReadOnlyList<string> diagonostics, object value)
+        public EvaluationResult(IEnumerable<Diagonostic> diagonostics, object value)
         {
-            Diagonostics = diagonostics;
+            Diagonostics = diagonostics.ToArray();
             Value = value;
         }
 
-        public IReadOnlyList<string> Diagonostics { get; }
+        public IReadOnlyList<Diagonostic> Diagonostics { get; }
         public object Value { get; }
     }
 }
