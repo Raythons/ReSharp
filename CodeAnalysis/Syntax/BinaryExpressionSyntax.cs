@@ -1,5 +1,6 @@
 ﻿namespace rs.CodeAnalysis.Syntax
 {
+
     internal sealed class BinaryExpressionSyntax : ExpressionSyntax
     {
         public ExpressionSyntax Right { get; }

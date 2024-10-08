@@ -30,7 +30,7 @@ namespace ReSharp.CodeAnalysis
 
         public void ReportInvalidNumber(TextSpan span, string text, Type type)
         {
-            var message = $"The number {text} is Valid ${type}";
+            var message = $"The number {text} is InValid ${type}";
             Report(span, message);
         }
 
@@ -47,9 +47,15 @@ namespace ReSharp.CodeAnalysis
             Report(span, message);
         }
 
-        internal void ReportUndefainedBinaryOpeartor(TextSpan span, string operatorText, Type leftType, Type rightType)
+        public void ReportUndefainedBinaryOpeartor(TextSpan span, string operatorText, Type leftType, Type rightType)
         {
             var message = $"Binary Operator `[{operatorText}]` is not defined for type {leftType} and {rightType}";
+            Report(span, message);
+        }
+
+        public void ReportUndefainedName(TextSpan span, object name)
+        {
+            var message = $"Variable  `[{name}]` doesn't exisit";
             Report(span, message);
         }
     }

@@ -9,6 +9,14 @@ namespace rs.CodeAnalysis.Binding
         private readonly DiagonosticBag _dignostics = new DiagonosticBag();
         public DiagonosticBag Dignostics  => _dignostics;
 
+        private readonly Dictionary<string, object> _variables;
+
+        public Binder (Dictionary<string, object> variables)
+        {
+
+            _variables = variables;
+        }
+
         public BoundExpression BindExpression(ExpressionSyntax syntax)
         {
             switch (syntax.Type)
@@ -20,11 +28,54 @@ namespace rs.CodeAnalysis.Binding
                 case SyntaxType.UnaryExpression:
                     return BindUnaryExpressionSyntax((UnaryExpressionSyntax)syntax);
                 case SyntaxType.ParenthesizedExpression:
-                    return BindExpression(((ParenthesizedExpressionSyntax)syntax).Expression);
+                    return BindParenthesizedExpression(((ParenthesizedExpressionSyntax)syntax));
+                case SyntaxType.NameExpression:
+                    return BindNameExpression(((NameExpressionSyntax)syntax));
+                case SyntaxType.AssigmentExpression:
+                    return BindAssigmentExpression(((AssigmentExpressionSyntax)syntax));
+
 
                 default:
                     throw new Exception($"Unsupported syntax  {syntax.Type}");
             }
+        }
+
+
+        private BoundExpression BindParenthesizedExpression(ParenthesizedExpressionSyntax syntax)
+        {
+            return BindExpression(syntax.Expression);
+        }
+
+        private BoundExpression BindNameExpression(NameExpressionSyntax syntax)
+        {
+            var name = syntax.IdentifierToken.Text;
+            if (!_variables.TryGetValue(name,  out var value))
+            {
+                _dignostics.ReportUndefainedName(syntax.IdentifierToken.Span, name);
+                return new BoundLiteralExpression(0);
+
+             }
+            var type = value.GetType();
+            return new BoundVariableExpression(name, type);
+        }
+
+        private BoundExpression BindAssigmentExpression(AssigmentExpressionSyntax syntax)
+        {
+            var name = syntax.IdentifierToken?.Text;
+            var boundExpression = BindExpression(syntax.Expression);
+            var defualtValue =
+                    boundExpression.Type == typeof(int)
+                    ? 0
+                    : boundExpression.Type == typeof(bool)
+                    ? (object)false
+                    : null;
+
+            if (defualtValue == null)
+                throw new Exception("UN sUPPORTED VARIBALE TYPE");
+
+            _variables[name] = defualtValue;
+            return new BoundAssigmentExpression(name, boundExpression);
+
         }
 
         private BoundExpression BindLiteralExpression(LiteralExpressionSyntax syntax)
@@ -56,7 +107,8 @@ namespace rs.CodeAnalysis.Binding
 
             if (boundOperator == null)
             {
-                _dignostics.ReportUndefainedBinaryOpeartor(syntax.OperatorToken.Span, syntax.OperatorToken.Text, boundLeft.Type , boundRight.Type);
+                _dignostics.ReportUndefainedBinaryOpeartor(syntax.OperatorToken.Span, syntax.OperatorToken.Text, 
+                    boundLeft.Type , boundRight.Type);
                 return boundLeft;
             }
 

@@ -7,28 +7,33 @@ namespace ReSharp.CodeAnalysis
     {
 
         private readonly BoundExpression _root;
+        private readonly Dictionary<string, object> _variables;
 
-        public Evaluator (BoundExpression root)
+        public Evaluator (BoundExpression root, Dictionary<string, object> variables)
         {
             _root = root;
+            _variables = variables;
         }
 
         public object Evaluate()
         {
             return EvaluateExpression(_root);
         }
-        //      +
-        //    /   \
-        //    1   *   (expression)
-        //      /  \
-        //     2    3
-        //
         private object EvaluateExpression(BoundExpression node)
         {
             // We Have Two Now
             if (node is BoundLiteralExpression n)
                 return n.Value;
 
+            if(node is BoundVariableExpression v)
+                return _variables[v.Name];
+            
+            if(node is BoundAssigmentExpression a)
+            {
+                var value = EvaluateExpression(a.Expression);
+                _variables[a.Name] = value;
+                return value;
+            }
             if (node is BoundUnaryExpression u)
             {
                 var operand = EvaluateExpression(u.Operand);

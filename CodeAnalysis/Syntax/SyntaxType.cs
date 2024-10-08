@@ -29,6 +29,9 @@
         UnaryExpression,
         EqualsEqualsToken,
         BangEqualsToken,
+        NameExpression,
+        AssigmentExpression,
+        EqualsToken,
     }
 
 }

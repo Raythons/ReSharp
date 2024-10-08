@@ -126,6 +126,11 @@ namespace rs.CodeAnalysis.Syntax
                             _position += 2;
                             return new SyntaxToken(SyntaxType.EqualsEqualsToken, Start, "==", null);
                         }    
+                        else
+                        {
+                            _position += 1;
+                            return new SyntaxToken(SyntaxType.EqualsToken, Start, "=", null);
+                        }
                     break;
                 case '!':
                         if (Lookahead == '=')
