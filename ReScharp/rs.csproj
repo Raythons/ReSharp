@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReSharp\ReSharp.csproj" />
+    <ProjectReference Include="..\CodeAnalyzer\ReSharp.csproj" />
   </ItemGroup>
 
 </Project>
