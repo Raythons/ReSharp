@@ -19,6 +19,20 @@ namespace rs.CodeAnalysis.Syntax
             var Parser = new Parser(text);
             return Parser.Parse();
         }
+
+        public static IEnumerable<SyntaxToken> ParseTokens(string text)
+        {
+            var Lexer = new Lexer(text);
+            while (true)
+            {
+                var token = Lexer.Lex();
+
+                if (token.Type == SyntaxType.EndOfFileToken)
+                    break;
+
+                yield return token;
+            }
+        }
     }
 
 }
