@@ -1,7 +1,7 @@
 ﻿
 namespace rs.CodeAnalysis.Syntax
 {
-    internal static class SyntaxFacts
+    public static class SyntaxFacts
     {
 
         public static int GetUnaryOperatorPrecedence(this SyntaxType type)
@@ -45,7 +45,7 @@ namespace rs.CodeAnalysis.Syntax
         }
 
 
-     
+
         internal static SyntaxType GetKeywordType(string text)
         {
             switch (text)
@@ -58,6 +58,49 @@ namespace rs.CodeAnalysis.Syntax
                     return SyntaxType.IdentifierToken;
             }
         }
-    }
 
+        public static string GetText(SyntaxType type)
+        {
+            switch (type)
+            {
+                // Operators
+                case SyntaxType.PlusToken:
+                    return "+";
+                case SyntaxType.MinusToken:
+                    return "-";
+                case SyntaxType.StarToken:
+                    return "*";
+                case SyntaxType.SlashToken:
+                    return "/";
+                case SyntaxType.BangToken:
+                    return "!";
+                case SyntaxType.AmperSandAmperSandToken:
+                    return "&&";
+                case SyntaxType.PipePipeToken:
+                    return "||";
+                case SyntaxType.EqualsEqualsToken:
+                    return "==";
+                case SyntaxType.BangEqualsToken:
+                    return "!=";
+                case SyntaxType.EqualsToken:
+                    return "=";
+
+                // Parentheses
+                case SyntaxType.OpenParenthesisToken:
+                    return "(";
+                case SyntaxType.CloseParenthesisToken:
+                    return ")";
+
+                // Keywords
+                case SyntaxType.TrueKeyword:
+                    return "true";
+                case SyntaxType.FalseKeyword:
+                    return "false";
+
+
+                default:
+                    return null;
+            }
+        }
+    }
 }
