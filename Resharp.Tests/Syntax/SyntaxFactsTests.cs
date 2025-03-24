@@ -20,8 +20,8 @@ public class SyntaxFactsTests
 
         Assert.Equal(type, token.Type);
         Assert.Equal(text, token.Text);
-
     }
+
 
     public static IEnumerable<object[]> GetSyntaxTypesData()
     {

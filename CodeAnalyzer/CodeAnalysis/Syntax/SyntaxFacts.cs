@@ -45,6 +45,25 @@ namespace rs.CodeAnalysis.Syntax
         }
 
 
+        public static IEnumerable<SyntaxType> GetUnaryOperatorTypes()
+        {
+            var types = (SyntaxType[])Enum.GetValues(typeof(SyntaxType));
+            foreach (var type in types)
+            {
+                if (GetUnaryOperatorPrecedence(type) > 0)
+                    yield return type;
+            }
+        }
+        public static IEnumerable<SyntaxType> GetBinaryOperatorTypes()
+        {
+            var types = (SyntaxType[])Enum.GetValues(typeof(SyntaxType));
+            foreach (var type in types)
+            {
+                if (GetBinaryOperatorPrecedence(type) > 0)
+                    yield return type;
+            }
+        }
+
 
         internal static SyntaxType GetKeywordType(string text)
         {
