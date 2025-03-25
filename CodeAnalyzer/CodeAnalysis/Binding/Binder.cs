@@ -56,7 +56,6 @@ namespace rs.CodeAnalysis.Binding
             {
                 _dignostics.ReportUndefainedName(syntax.IdentifierToken.Span, name);
                 return new BoundLiteralExpression(0);
-
             }
             var type = variable.Type;
             return new BoundVariableExpression(variable);

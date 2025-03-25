@@ -1,5 +1,5 @@
 using rs.CodeAnalysis.Syntax;
-namespace Resharp.Tests;
+namespace Resharp.Tests.Syntax;
 
 public partial class ParserTests
 {

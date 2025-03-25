@@ -74,7 +74,7 @@ namespace rs.CodeAnalysis.Syntax
         private ExpressionSyntax ParseAssigmentExpression()
         {
 
-            if(Peek(0).Type  == SyntaxType.IdentifierToken  &&
+            if (Peek(0).Type == SyntaxType.IdentifierToken &&
                 Peek(1).Type == SyntaxType.EqualsToken)
             {
                 var idenfifierToken = NextToken();
@@ -122,20 +122,20 @@ namespace rs.CodeAnalysis.Syntax
             switch (Current.Type)
             {
                 case SyntaxType.OpenParenthesisToken:
-                {
-                    var Left = NextToken();
-                    var Expression = ParseBinaryExpression();
-                    var Right = MatchToken(SyntaxType.CloseParenthesisToken);
-                    return new ParenthesizedExpressionSyntax(Left, Expression, Right);
-                }
+                    {
+                        var Left = NextToken();
+                        var Expression = ParseAssigmentExpression();
+                        var Right = MatchToken(SyntaxType.CloseParenthesisToken);
+                        return new ParenthesizedExpressionSyntax(Left, Expression, Right);
+                    }
 
                 case SyntaxType.TrueKeyword:
                 case SyntaxType.FalseKeyword:
-                {
-                    var keywordToken = NextToken();
-                    var value = keywordToken.Type == SyntaxType.TrueKeyword;
-                    return new LiteralExpressionSyntax(keywordToken, value);
-                }
+                    {
+                        var keywordToken = NextToken();
+                        var value = keywordToken.Type == SyntaxType.TrueKeyword;
+                        return new LiteralExpressionSyntax(keywordToken, value);
+                    }
 
                 case SyntaxType.IdentifierToken:
                     {
