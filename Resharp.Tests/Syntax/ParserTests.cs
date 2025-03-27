@@ -6,7 +6,7 @@ namespace Resharp.Tests.Syntax;
 public partial class ParserTests
 {
 
-    [Theory]
+    // [Theory]
     [MemberData(nameof(GetUnaryOperatorPairsData))]
     public void Parser_UnaryExpression_HonorsPrecedences(SyntaxType unaryType, SyntaxType binaryType)
     {

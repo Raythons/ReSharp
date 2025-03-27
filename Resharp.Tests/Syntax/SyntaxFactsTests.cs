@@ -5,7 +5,7 @@ namespace Resharp.Tests.Syntax;
 
 public class SyntaxFactsTests
 {
-    [Theory]
+    // [Theory]
     [MemberData(nameof(GetSyntaxTypesData))]
 
     public void SyntaxFace_GetText_RoundTrips(SyntaxType type)

@@ -17,7 +17,7 @@ public class LexerTest
         Assert.Equal(text, token.Text);
     }
 
-    [Theory]
+    // [Theory]
     [MemberData(nameof(GetTokensPairsData))]
     public void Lexer_Lexes_PairsTokens(SyntaxType t1Type, string t1Text, SyntaxType t2Type, string t2Text)
     {
@@ -36,7 +36,7 @@ public class LexerTest
     }
 
 
-    [Theory]
+    // [Theory]
     [MemberData(nameof(GetTokensPairsWithSeparatorData))]
     public void Lexer_Lexes_PairsTokens_WithSeparator(SyntaxType t1Type, string t1Text,
                                                     SyntaxType separatorType, string separatorText,

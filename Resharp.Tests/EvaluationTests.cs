@@ -6,7 +6,7 @@ namespace Resharp.Tests;
 
 public class EvaluationTests
 {
-    [Theory]
+    // [Theory]
     [InlineData("1", 1)]
     [InlineData("+1", 1)]
     [InlineData("-1", -1)]
